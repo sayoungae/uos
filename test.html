@@ -1,0 +1,74 @@
+<script>
+    
+	$(function(){
+		let $mainForm = $(document.mainForm);
+		var menu = ['Undergraduate', 'Graduate', 'Exchange Program', 'Korean Language Course'];
+		var menuK = ['대학', '대학원', '교환학생', '한국어 교육'];
+		var swiper1 = new Swiper('.bgSlide', {
+			speed: 800,
+			loop: true,
+			breakpoints: {
+				1401: {
+					slidesPerView: 'auto',
+					spaceBetween: 40,
+					centeredSlides: true,
+				},
+			},
+			pagination: {
+				el: '.slide_tab > div',
+				clickable: true,
+        		renderBullet: function (index, className) {
+          		return '<div class="' + className + '">' +
+						'<span class="text01">' + menu[index] + '</span>' +
+						'<div><span class="text02">' + menuK[index] + '</span><span class="bar"></span><span class="text02">0' + (index + 1) + '</span></div>' +
+					'</div>';
+        		},
+			},
+			navigation: {
+				prevEl: '.bgSlide_prev',
+				nextEl: '.bgSlide_next',
+			},
+			on: {
+				realIndexChange: function () {
+					// 메인 슬라이드
+					$('.bgSlide .swiper-slide.on').removeClass('on');
+					var target = this.realIndex + 1;
+					setTimeout(function(){
+						$('.bgSlide .swiper-slide.bg0' + target).addClass('on');
+					}, 300);
+					// 세종 뉴스 탭 전환
+					if ( this.realIndex != 3 ) {
+						$('.section01 .inner .sec_header ul li:first-child').find('a').trigger('click');
+					} else {
+						$('.section01 .inner .sec_header ul li:last-child').find('a').trigger('click');
+					}
+					// 중간 비주얼 슬라이드 탭 전환
+					$('.section02 .section02_cont').hide();
+					$('.section02 .section02_cont.cont0' + (this.realIndex + 1)).show();
+					// 맨 하단 공지사항, FAQ, 다운로드 탭 전환
+					$('.section04 .section04_cont').hide();
+					$('.section04 .section04_cont').eq(this.realIndex).show();
+					
+					$mainForm.find("input[name=bgSlideIndex]").val(this.realIndex+1)
+				}
+			}
+		});
+
+		
+
+
+		
+
+		if( $mainForm.find("input[name=bgSlideIndex]").val() ){
+			let bgSlideIndex = $mainForm.find("input[name=bgSlideIndex]").val();
+			console.log("bgSlideIndex > ", bgSlideIndex)
+			swiper1.slideTo( bgSlideIndex - 1);
+		}
+
+		$(window).on('resize', function () {
+			ww = $(window).width();
+			initSwiper();
+		});
+		
+	});		
+</script>
